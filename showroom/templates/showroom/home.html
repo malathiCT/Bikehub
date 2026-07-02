@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}BikeHub Showroom | Premium Bikes{% endblock %}
+
+{% block content %}
+<section id="home" class="hero-section">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="hero-card p-4 p-lg-5 rounded-4">
+                    <span class="section-title">Premium Motorcycle Experience</span>
+                    <h1 class="display-4 fw-bold mt-3">Own the road with elite performance.</h1>
+                    <p class="lead text-white-50 mt-3">Discover bold machines, premium service, and a showroom experience designed for modern riders.</p>
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        <a href="#featured-bikes" class="btn btn-accent px-4 py-2">Book Test Ride</a>
+                        <a href="#about" class="btn btn-outline-light px-4 py-2">Explore Showroom</a>
+                    </div>
+                    <div class="row mt-4 g-3">
+                        <div class="col-sm-4">
+                            <div class="stat-box">
+                                <h4 class="fw-bold mb-0">50+</h4>
+                                <small class="text-white-50">Models</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="stat-box">
+                                <h4 class="fw-bold mb-0">4.9/5</h4>
+                                <small class="text-white-50">Rated</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="stat-box">
+                                <h4 class="fw-bold mb-0">24/7</h4>
+                                <small class="text-white-50">Support</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <p class="section-title mb-2">Live API Collection</p>
+            <h2 class="fw-bold">Fresh showroom data from the REST API</h2>
+        </div>
+    </div>
+    <div id="api-bike-grid" class="row g-4"></div>
+</section>
+
+<section id="featured-bikes" class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <p class="section-title mb-2">Featured Bikes</p>
+            <h2 class="fw-bold">Ride the latest legends</h2>
+        </div>
+        <a href="#" class="btn btn-outline-light btn-sm">View All</a>
+    </div>
+    <div class="row g-4">
+        {% for bike in featured_bikes %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card bike-card h-100 overflow-hidden rounded-4">
+                <img src="{{ bike.get_display_image_url }}" class="card-img-top" alt="{{ bike.brand }} {{ bike.model }}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="badge badge-accent mb-2">{{ bike.brand }}</span>
+                            <h5 class="card-title fw-bold">{{ bike.model }}</h5>
+                        </div>
+                        <span class="fw-bold text-danger">₹{{ bike.price }}</span>
+                    </div>
+                    <p class="card-text text-white-50">{{ bike.description|truncatechars:95 }}</p>
+                    <div class="d-flex justify-content-between text-sm text-white-50">
+                        <span>{{ bike.engine_capacity }}</span>
+                        <span>{{ bike.mileage }}</span>
+                    </div>
+                    <a href="{% url 'bike-detail' bike.id %}" class="btn btn-accent mt-3 w-100">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5 text-white-50">No featured bikes available yet.</div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <p class="section-title mb-2">Latest Models</p>
+            <h2 class="fw-bold">Browse our showroom</h2>
+        </div>
+    </div>
+    <div class="row g-4">
+        {% for bike in bikes %}
+        <div class="col-lg-6 col-md-12">
+            <div class="card bike-card h-100 overflow-hidden rounded-4">
+                <img src="{{ bike.get_display_image_url }}" class="card-img-top" alt="{{ bike.brand }} {{ bike.model }}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="badge badge-accent mb-2">{{ bike.brand }}</span>
+                            <h5 class="card-title fw-bold">{{ bike.model }}</h5>
+                        </div>
+                        <span class="fw-bold text-danger">₹{{ bike.price }}</span>
+                    </div>
+                    <p class="card-text text-white-50">{{ bike.description|truncatechars:110 }}</p>
+                    <div class="row mt-3 text-white-50">
+                        <div class="col-6"><strong>Engine</strong><br>{{ bike.engine_capacity }}</div>
+                        <div class="col-6"><strong>Mileage</strong><br>{{ bike.mileage }}</div>
+                    </div>
+                    <a href="{% url 'bike-detail' bike.id %}" class="btn btn-accent mt-3">View More</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5 text-white-50">No bikes are available yet.</div>
+        {% endfor %}
+    </div>
+
+    <nav class="mt-5" aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            <li class="page-item active"><a class="page-link" href="#">{{ page_obj.number }}</a></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</section>
+
+<section id="brands" class="container py-5">
+    <p class="section-title mb-2">Popular Brands</p>
+    <h2 class="fw-bold mb-4">Trusted names in every ride</h2>
+    <div class="d-flex flex-wrap gap-3">
+        {% for brand in brands %}
+        <span class="brand-pill px-4 py-2 rounded-pill">{{ brand }}</span>
+        {% endfor %}
+    </div>
+</section>
+
+<section id="about" class="container py-5">
+    <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+            <p class="section-title mb-2">About BikeHub</p>
+            <h2 class="fw-bold">A modern showroom crafted for passionate riders.</h2>
+            <p class="text-white-50">From daily commuters to premium superbikes, our showroom combines performance, design, and dependable service under one roof.</p>
+        </div>
+        <div class="col-lg-6">
+            <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1000&q=80" class="img-fluid rounded-4" alt="Showroom interior">
+        </div>
+    </div>
+</section>
+
+<section id="reviews" class="container py-5">
+    <p class="section-title mb-2">Customer Reviews</p>
+    <h2 class="fw-bold mb-4">What riders say</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="review-card p-4 rounded-4 h-100">
+                <h5 class="fw-bold">Aarav Singh</h5>
+                <p class="text-white-50">“The experience felt premium from start to finish. The test ride was seamless.”</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="review-card p-4 rounded-4 h-100">
+                <h5 class="fw-bold">Nisha Rao</h5>
+                <p class="text-white-50">“Beautiful collection and a very polished showroom. Great for first-time buyers.”</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="review-card p-4 rounded-4 h-100">
+                <h5 class="fw-bold">Dev Menon</h5>
+                <p class="text-white-50">“The bike details and support were very professional. Highly recommended.”</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="container py-5">
+    <div class="text-center">
+        <p class="section-title mb-2">Contact</p>
+        <h2 class="fw-bold">Ready to ride? Visit us today.</h2>
+        <a href="#" class="btn btn-accent mt-3">Schedule a Visit</a>
+    </div>
+</section>
+
+<footer class="footer py-4 mt-5">
+    <div class="container text-center text-white-50">
+        © 2026 BikeHub Showroom. Crafted for modern riders.
+    </div>
+</footer>
+{% endblock %}

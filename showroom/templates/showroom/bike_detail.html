@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ bike.brand }} {{ bike.model }} | BikeHub{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4 align-items-center">
+        <div class="col-lg-7">
+            <img src="{{ bike.get_display_image_url }}" class="img-fluid rounded-4" alt="{{ bike.brand }} {{ bike.model }}">
+        </div>
+        <div class="col-lg-5">
+            <span class="badge badge-accent">{{ bike.brand }}</span>
+            <h1 class="display-5 fw-bold mt-3">{{ bike.model }}</h1>
+            <p class="text-white-50">{{ bike.description }}</p>
+            <div class="row g-3 mt-3">
+                <div class="col-6">
+                    <div class="stat-box">
+                        <h6>Price</h6>
+                        <p class="fw-bold mb-0">₹{{ bike.price }}</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-box">
+                        <h6>Engine</h6>
+                        <p class="fw-bold mb-0">{{ bike.engine_capacity }}</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-box">
+                        <h6>Mileage</h6>
+                        <p class="fw-bold mb-0">{{ bike.mileage }}</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-box">
+                        <h6>Color</h6>
+                        <p class="fw-bold mb-0">{{ bike.color|default:'Matte Black' }}</p>
+                    </div>
+                </div>
+            </div>
+            <a href="/" class="btn btn-accent mt-4">Back to showroom</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
